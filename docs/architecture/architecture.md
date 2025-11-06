@@ -31,7 +31,7 @@ Abaixo está uma representação visual simples da nossa arquitetura de três ca
 |  (React Native)  |--(1)--> |                  |
 |                  |         |                  |
 +------------------+         +------------------+
-
+```
 ## 3. Justificativa da Mudança no Banco de Dados (N705 -> N708)
 
 No planejamento da Etapa 1 (N705), nós citamos duas opções de banco de dados: MongoDB (NoSQL) e PostgreSQL (Relacional).
