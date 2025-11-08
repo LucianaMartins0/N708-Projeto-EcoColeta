@@ -1,0 +1,5 @@
+# Pasta de ferramentas (muito pesada)
+node_modules/
+
+# Arquivo de segredos (senhas do banco de dados)
+.env
