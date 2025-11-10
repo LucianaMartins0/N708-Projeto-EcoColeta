@@ -35,3 +35,13 @@ app.listen(PORT, () => {
 });
 
 // ROTA [GET] /api/ecopontos abaixo:
+app.get('/api/ecopontos', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM ecopontos');
+    res.json(result.rows);
+  } catch (err) {
+
+    console.error('Erro ao buscar ecopontos:', err.message);
+    res.status(500).json({ message: 'Erro interno do servidor' });
+  }
+});
