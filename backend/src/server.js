@@ -16,24 +16,22 @@ app.get('/', (req, res) => {
   res.send('Olá! O Backend do EcoColeta está funcionando! 🚀');
 });
 
-// Nova rota para testar a conexão com o banco de dados
-app.get('/test-db', async (req, res) => {
+
+// ROTA [GET] /api/materiais
+app.get('/api/materiais', async (req, res) => {
   try {
-    const result = await pool.query('SELECT NOW()');
-    
-    res.json({
-      message: 'Conexão com o PostgreSQL foi um SUCESSO! ✅',
-      data: result.rows[0],
-    });
-  } catch (error) {
-    console.error('Erro ao conectar no banco de dados:', error);
-    res.status(500).json({
-      message: 'FALHA ao conectar com o PostgreSQL! ❌',
-      error: error.message,
-    });
+
+    const result = await pool.query('SELECT * FROM materiais');
+    res.json(result.rows);
+  } catch (err) {
+
+    console.error('Erro ao buscar materiais:', err.message);
+    res.status(500).json({ message: 'Erro interno do servidor' });
   }
 });
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
+
+// ROTA [GET] /api/ecopontos abaixo:
