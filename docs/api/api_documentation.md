@@ -2,7 +2,7 @@
 Esta documentação define os contratos de interface para a API do Backend. O Frontend (Web e Mobile) deve utilizar estes endpoints para todas as operações de dados.
 
 ## Visão Geral
-* **Base URL (Desenvolvimento):** `http://localhost:3000/api`
+* **Base URL (Desenvolvimento):** `https://n708-projeto-ecocoleta.onrender.com/api`
 * **Formato de Dados:** JSON
 * **Padrão de Erros:** Códigos HTTP padrão (200 para sucesso, 404 para não encontrado, 500 para erro de servidor).
 

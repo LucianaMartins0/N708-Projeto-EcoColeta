@@ -39,7 +39,7 @@ export default function MapaPage() {
   const loadEcopontos = async () => {
     try {
 
-      const response = await fetch('http://localhost:3000/api/ecopontos');
+      const response = await fetch('https://n708-projeto-ecocoleta.onrender.com/api/ecopontos');
       if (!response.ok) {
         throw new Error('Falha na rede ou servidor backend desligado');
       }

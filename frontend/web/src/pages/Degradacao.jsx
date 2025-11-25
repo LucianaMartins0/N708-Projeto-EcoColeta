@@ -14,7 +14,7 @@ export default function DegradacaoPage() {
 
 const loadMateriais = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/materiais');
+      const response = await fetch('https://n708-projeto-ecocoleta.onrender.com/api/materiais');
 
       const data = await response.json(); 
 
