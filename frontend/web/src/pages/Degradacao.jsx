@@ -2,26 +2,43 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Leaf, AlertTriangle, ChevronRight, Lightbulb } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner"; 
 
 export default function DegradacaoPage() {
   const [materiais, setMateriais] = useState([]);
   const [expandedCard, setExpandedCard] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     loadMateriais();
   }, []);
 
-const loadMateriais = async () => {
+  const loadMateriais = async () => {
     try {
+      // 1. Faz o pedido ao servidor na Nuvem (Render)
       const response = await fetch('https://n708-projeto-ecocoleta.onrender.com/api/materiais');
+
+      // 2. Verifica se a resposta foi boa
+      if (!response.ok) {
+        throw new Error('Falha ao conectar com o servidor');
+      }
 
       const data = await response.json(); 
 
-      setMateriais(data);
-    } catch (error) {
+      // 3. Garante que recebemos uma lista antes de salvar
+      if (Array.isArray(data)) {
+        setMateriais(data);
+      } else {
+        console.error("Dados inválidos recebidos:", data);
+        setMateriais([]); // Evita a tela branca
+      }
 
+    } catch (error) {
       console.error("Erro ao carregar materiais da API:", error);
+      toast.error("Erro de conexão: O servidor pode estar hibernando. Tente recarregar em 1 minuto.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -33,7 +50,8 @@ const loadMateriais = async () => {
       metal: "🥤",
       organico: "🍎"
     };
-    return icons[categoria] || "♻️";
+    // Proteção contra categoria vazia
+    return icons[categoria?.toLowerCase()] || "♻️";
   };
 
   const getCategoryColor = (categoria) => {
@@ -44,12 +62,23 @@ const loadMateriais = async () => {
       metal: "from-yellow-500 to-yellow-600",
       organico: "from-amber-500 to-amber-600"
     };
-    return colors[categoria] || "from-gray-500 to-gray-600";
+    return colors[categoria?.toLowerCase()] || "from-gray-500 to-gray-600";
   };
 
   const toggleCard = (index) => {
     setExpandedCard(expandedCard === index ? null : index);
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-center">
+          <Leaf className="w-8 h-8 animate-pulse mx-auto mb-2 text-green-600" />
+          <p className="text-gray-600">Carregando materiais...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="px-4 py-6 space-y-6">
@@ -111,7 +140,7 @@ const loadMateriais = async () => {
 
                 {/* Conteúdo principal */}
                 <div className="p-4 space-y-4">
-                  {/* Frase de impacto contextualizada - sempre visível */}
+                  {/* Frase de impacto / Curiosidade */}
                   <div className="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-400">
                     <div className="flex items-start gap-3">
                       <AlertTriangle className="w-6 h-6 text-orange-500 mt-0.5 flex-shrink-0" />
@@ -127,69 +156,33 @@ const loadMateriais = async () => {
                   </div>
 
                   {/* Conteúdo expansível */}
-                  {expandedCard === index && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="space-y-4"
-                    >
-                      {/* Dica de descarte */}
-                      {material.dica_descarte && (
-                        <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
-                          <div className="flex items-start gap-3">
-                            <Lightbulb className="w-6 h-6 text-green-600 mt-0.5 flex-shrink-0" />
-                            <div>
-                              <p className="font-semibold text-green-800 text-sm mb-2">
-                                Como descartar corretamente:
-                              </p>
-                              <p className="text-green-700 text-sm leading-relaxed">
-                                {material.dica_descarte}
+                  <AnimatePresence>
+                    {expandedCard === index && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="space-y-4"
+                      >
+                        {/* Impacto Ambiental (Baseado na categoria) */}
+                         <div className="bg-gray-50 p-4 rounded-lg">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Leaf className="w-5 h-5 text-green-600" />
+                              <p className="font-semibold text-gray-800 text-sm">
+                                Impacto da reciclagem:
                               </p>
                             </div>
+                            <p className="text-gray-600 text-sm leading-relaxed">
+                              {material.categoria === 'plastico' && 'Reciclar plástico economiza até 80% da energia necessária para produzir plástico novo.'}
+                              {material.categoria === 'papel' && 'Cada tonelada de papel reciclado economiza cerca de 22 árvores e 26 mil litros de água.'}
+                              {material.categoria === 'vidro' && 'O vidro pode ser reciclado infinitas vezes sem perder qualidade, economizando 30% de energia.'}
+                              {material.categoria === 'metal' && 'Reciclar alumínio economiza 95% da energia necessária para produzir alumínio novo.'}
+                              {material.categoria === 'organico' && 'Compostar resíduos orgânicos reduz em 30% o volume de lixo doméstico.'}
+                            </p>
                           </div>
-                        </div>
-                      )}
-
-                      {/* Exemplos */}
-                      {material.exemplos && material.exemplos.length > 0 && (
-                        <div className="bg-blue-50 p-4 rounded-lg">
-                          <p className="font-semibold text-blue-800 text-sm mb-3 flex items-center gap-2">
-                            <span>📝</span>
-                            Exemplos deste material:
-                          </p>
-                          <div className="grid grid-cols-2 gap-2">
-                            {material.exemplos.map((exemplo, idx) => (
-                              <Badge
-                                key={idx}
-                                variant="outline"
-                                className="text-xs justify-center py-1 bg-white border-blue-200 text-blue-700"
-                              >
-                                {exemplo}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Impacto ambiental */}
-                      <div className="bg-gray-50 p-4 rounded-lg">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Leaf className="w-5 h-5 text-green-600" />
-                          <p className="font-semibold text-gray-800 text-sm">
-                            Impacto da reciclagem:
-                          </p>
-                        </div>
-                        <p className="text-gray-600 text-sm leading-relaxed">
-                          {material.categoria === 'plastico' && 'Reciclar plástico economiza até 80% da energia necessária para produzir plástico novo.'}
-                          {material.categoria === 'papel' && 'Cada tonelada de papel reciclado economiza cerca de 22 árvores e 26 mil litros de água.'}
-                          {material.categoria === 'vidro' && 'O vidro pode ser reciclado infinitas vezes sem perder qualidade, economizando 30% de energia.'}
-                          {material.categoria === 'metal' && 'Reciclar alumínio economiza 95% da energia necessária para produzir alumínio novo.'}
-                          {material.categoria === 'organico' && 'Compostar resíduos orgânicos reduz em 30% o volume de lixo doméstico.'}
-                        </p>
-                      </div>
-                    </motion.div>
-                  )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </CardContent>
             </Card>
@@ -197,10 +190,10 @@ const loadMateriais = async () => {
         ))}
       </div>
 
-      {materiais.length === 0 && (
+      {materiais.length === 0 && !isLoading && (
         <div className="text-center py-12">
           <Leaf className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-          <p className="text-gray-500">Carregando informações sobre degradação...</p>
+          <p className="text-gray-500">Nenhum material encontrado.</p>
         </div>
       )}
     </div>

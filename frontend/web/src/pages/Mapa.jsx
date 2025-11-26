@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { toast } from "sonner"; //new
+import { toast } from "sonner"; 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,11 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import { MapPin, Search, Clock, Phone, Navigation, Locate } from "lucide-react";
 import "leaflet/dist/leaflet.css";
 
-
 import L from "leaflet";
 delete L.Icon.Default.prototype._getIconUrl;
 
-// Ícone cinza personalizado para os ecopontos
 const grayIcon = new L.Icon({
   iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-grey.png",
   shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
@@ -38,13 +36,13 @@ export default function MapaPage() {
 
   const loadEcopontos = async () => {
     try {
-
       const response = await fetch('https://n708-projeto-ecocoleta.onrender.com/api/ecopontos');
+      
       if (!response.ok) {
-        throw new Error('Falha na rede ou servidor backend desligado');
+         throw new Error('Falha na resposta do servidor');
       }
+      
       const data = await response.json(); 
-
 
       const ecopontosFatiados = data.map(ecoponto => {
         const fatias = (ecoponto.materiais_aceitos && typeof ecoponto.materiais_aceitos === 'string')
@@ -56,14 +54,11 @@ export default function MapaPage() {
 
       setEcopontos(ecopontosFatiados);
       setFilteredEcopontos(ecopontosFatiados);
-
+    
     } catch (error) {
       console.error("Erro ao carregar ecopontos da API:", error);
-      toast({
-        variant: "destructive",
-        title: "Erro de Conexão",
-        description: "Não foi possível buscar os ecopontos. Verifique se o servidor (backend) está ligado.",
-      });
+      // --- CORREÇÃO AQUI: Usando a sintaxe simples do Sonner ---
+      toast.error("Erro de conexão: O servidor pode estar hibernando. Tente recarregar a página em 1 minuto.");
     }
     setIsLoading(false);
   };
@@ -76,11 +71,11 @@ export default function MapaPage() {
         },
         (error) => {
           console.log("Erro ao obter localização:", error);
-          setUserLocation([-3.743587, -38.533267]); // Localização padrão (Fortaleza)
+          setUserLocation([-3.743587, -38.533267]); 
         }
       );
     } else {
-      setUserLocation([-3.743587, -38.533267]); // Localização padrão (Fortaleza)
+      setUserLocation([-3.743587, -38.533267]); 
     }
   };
 
@@ -99,12 +94,12 @@ export default function MapaPage() {
     
     setFilteredEcopontos(filtered);
 
-if (filtered.length === 0 && (cidade || cep)) {
-toast.error("Nenhum ecoponto encontrado para esta busca.", {
-duration: 4000, // Tempo que ele fica na tela
-position: 'bottom-right' 
-});
-}
+    if (filtered.length === 0 && (cidade || cep)) {
+      // Sintaxe simples do Sonner
+      toast.error("Nenhum ecoponto encontrado para esta busca.", {
+        duration: 3000,
+      });
+    }
   };
 
   const clearFilters = () => {
@@ -156,7 +151,7 @@ position: 'bottom-right'
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
           <Navigation className="w-8 h-8 animate-pulse mx-auto mb-2 text-green-600" />
-          <p className="text-gray-600">Localizando você e carregando ecopontos...</p>
+          <p className="text-gray-600">Conectando ao servidor (pode levar 1 min)...</p>
         </div>
       </div>
     );
@@ -164,13 +159,11 @@ position: 'bottom-right'
 
   return (
     <div className="h-full">
-      {/* Título */}
       <div className="p-4 pb-2">
         <h1 className="text-2xl font-bold text-green-800 mb-1">Mapa de Ecopontos</h1>
         <p className="text-green-600 text-sm">Encontre pontos de coleta próximos a você</p>
       </div>
 
-      {/* Filtros */}
       <Card className="mx-4 mb-4 shadow-md">
         <CardContent className="p-4">
           <div className="space-y-3">
@@ -219,7 +212,6 @@ position: 'bottom-right'
         </CardContent>
       </Card>
 
-      {/* Mapa */}
       <div className="mx-4 mb-4 h-96 md:h-[500px] rounded-lg overflow-hidden shadow-lg">
         <MapContainer
           center={userLocation}
@@ -247,7 +239,6 @@ position: 'bottom-right'
                   </h3>
 
                   <div className="space-y-3 text-sm">
-                    {/* Endereço */}
                     <div className="bg-gray-50 p-3 rounded-lg">
                       <div className="flex items-start gap-2">
                         <MapPin className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
@@ -259,7 +250,6 @@ position: 'bottom-right'
                       </div>
                     </div>
 
-                    {/* Materiais Aceitos */}
                     <div className="bg-green-50 p-3 rounded-lg">
                       <p className="font-medium text-green-800 mb-2 flex items-center gap-2">
                         <span>♻️</span>
@@ -278,7 +268,6 @@ position: 'bottom-right'
                       </div>
                     </div>
 
-                    {/* Informações adicionais */}
                     {(ecoponto.horario_funcionamento || ecoponto.telefone) && (
                       <div className="bg-blue-50 p-3 rounded-lg space-y-2">
                         {ecoponto.horario_funcionamento && (
@@ -310,7 +299,6 @@ position: 'bottom-right'
         </MapContainer>
       </div>
 
-      {/* Lista resumida para mobile */}
       <div className="mx-4 mb-4">
         <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
           <MapPin className="w-5 h-5 text-green-600" />
