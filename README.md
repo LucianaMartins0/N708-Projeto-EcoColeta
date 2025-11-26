@@ -58,7 +58,7 @@ Se desejar rodar o projeto na sua própria máquina:
 ```bash
 git clone [https://github.com/LucianaMartins0/N708-Projeto-EcoColeta.git](https://github.com/LucianaMartins0/N708-Projeto-EcoColeta.git)
 cd N708-Projeto-EcoColeta
-
+```
 
 ### 2. Configurar e Rodar o Backend
 ```bash
@@ -68,6 +68,7 @@ npm install
 npm start
 
 O servidor rodará em http://localhost:3000
+```
 
 ### 3. Configurar e Rodar o Frontend
 ```bash
@@ -76,11 +77,13 @@ npm install
 npm run dev
 
 Acesse a aplicação em http://localhost:5173
+```
 
 ### 4. Rodar Testes Automatizados
 ```bash
 cd backend
 npm test
+```
 
 🤝 Validação com Público-Alvo
 O projeto foi validado com um público real para garantir sua utilidade.
