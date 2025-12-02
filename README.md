@@ -88,26 +88,18 @@ npm test
 🤝 Validação com Público-Alvo
 O projeto foi validado com um público real para garantir sua utilidade.
 
-    Entidade: Mercadinho PH (Pequeno comércio local)
-
-    Local: Bairro Jardim América, Fortaleza - CE
-
-    Representante: Sr. Paulo Henrique
-
-    Resultado: [EM BREVE - Será preenchido após a visita]
+* **Entidade:** Mercadinho PH (Pequeno comércio local)
+* **Local:** Bairro Jardim América, Fortaleza - CE
+* **Representante:** Sr. Paulo Henrique
+* **Resultado:** Validado com sucesso. O usuário destacou a utilidade da geolocalização para descarte em trânsito e considerou a navegação fluida e intuitiva.
 
 Para mais detalhes, consulte o Relatório de Validação.
 
 👥 Equipe de Desenvolvimento
 
-    Luciana Soares Martins
-
-    Alano Dantas Ximenes
-
-    Antônio Eduardo Dos Santos
-
-    Diego Bruno Rocha Silva
-
-    Kassan Nashville Mais
-
-    Vytorya Daysy Oliveira Pedrosa
+* **Alano Dantas Ximenes:** Arquitetura do sistema, modelagem do banco de dados (PostgreSQL) e configuração do Supabase.
+* **Antônio Eduardo Dos Santos:** Desenvolvimento Backend (Node.js), implementação das rotas da API e deploy no Render.
+* **Diego Bruno Rocha Silva:** Validação com público-alvo, realização de entrevistas e coleta de feedback (Mercadinho PH).
+* **Kassan Nashville Mais:** Design de interface (UI/UX), prototipagem e implementação de estilos (Tailwind CSS).
+* **Luciana Soares Martins:** Desenvolvimento Frontend (React), integração de APIs e gestão do repositório GitHub.
+* **Vytorya Daysy Oliveira Pedrosa:** Documentação técnica, definição de requisitos e testes de qualidade (QA).
